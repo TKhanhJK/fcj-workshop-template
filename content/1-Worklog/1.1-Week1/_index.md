@@ -1,4 +1,4 @@
----
+﻿---
 title: "Week 1 Worklog"
 date: 2026-10-05
 weight: 1
@@ -15,9 +15,9 @@ pre: " <b> 1.1. </b> "
 | Day | Task                                                                                                                                                                                                   | Start Date | Completion Date | Reference Material                        |
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | --------------- | ----------------------------------------- |
 | 2   | - Get acquainted with FCAJ members <br> - Read and take note of internship unit rules and regulations                                                                                                   | 05/10/2026 | 05/10/2026      |
-| 3   | - Learn about AWS and its types of services <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                              | 06/10/2026 | 06/10/2026      | <https://cloudjourney.awsstudygroup.com/> |
+| 3   | - Learn about AWS and its types of services <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database                                              | 06/10/2026 | 06/10/2026      | <https://cloudjourney.awsstudygroup.com/> |
 | 4   | - Create AWS Free Tier account <br> - Learn about AWS Console & AWS CLI <br> - **Practice:** <br>&emsp; + Create AWS account <br>&emsp; + Install & configure AWS CLI <br> &emsp; + How to use AWS CLI | 07/10/2026 | 07/10/2026      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Learn basic EC2: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - SSH connection methods to EC2 <br> - Learn about Elastic IP   <br>                            | 08/10/2026 | 08/10/2026      | <https://cloudjourney.awsstudygroup.com/> |
+| 5   | - Learn basic EC2: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS - SSH connection methods to EC2 <br> - Learn about Elastic IP   <br>                            | 08/10/2026 | 08/10/2026      | <https://cloudjourney.awsstudygroup.com/> |
 | 6   | - **Practice:** <br>&emsp; + Launch an EC2 instance <br>&emsp; + Connect via SSH <br>&emsp; + Attach an EBS volume                                                                                     | 09/10/2026 | 09/10/2026      | <https://cloudjourney.awsstudygroup.com/> |
 
 
@@ -28,7 +28,6 @@ pre: " <b> 1.1. </b> "
   * Storage
   * Networking 
   * Database
-  * ...
 
 * Successfully created and configured an AWS Free Tier account.
 
@@ -38,7 +37,6 @@ pre: " <b> 1.1. </b> "
   * Access Key
   * Secret Key
   * Default Region
-  * ...
 
 * Used AWS CLI to perform basic operations such as:
 
@@ -47,7 +45,5 @@ pre: " <b> 1.1. </b> "
   * View EC2 service
   * Create and manage key pairs
   * Check information about running services
-  * ...
 
 * Acquired the ability to connect between the web interface and CLI to manage AWS resources in parallel.
-* ...
