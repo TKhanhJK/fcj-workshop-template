@@ -7,13 +7,13 @@ chapter: false
 
 # Báo cáo thực tập
 ### Thông tin sinh viên:
-&emsp; **Họ và tên:** Nguyễn Văn A
+&emsp; **Họ và tên:** Tống Gia Khánh
 
-&emsp; **Số điện thoại:** 0989888999
+&emsp; **Số điện thoại:** 0979255267
 
-&emsp; **Email:** Anguyenvan@gmail.com
+&emsp; **Email:** 23110032@student.hcmute.edu.vn
 
-&emsp; **Trường:** Đại học Sư phạm Kỹ thuật TP.HCM
+&emsp; **Trường:** Đại học Công Nghệ Kỹ thuật TP.HCM
 
 &emsp; **Ngành:** Công nghệ thông tin
 
@@ -23,7 +23,7 @@ chapter: false
 
 &emsp; **Vị trí thực tập:** Workforce Bootcamp - First Cloud AI Journey
 
-&emsp; **Thời gian thực tập:** Từ ngày 12/08/2025 đến ngày 12/11/2025
+&emsp; **Thời gian thực tập:** Từ ngày 01/01/2026 đến ngày 01/12/2026
 
 ![Ảnh đại diện của bạn](/images/avatar.png)
 

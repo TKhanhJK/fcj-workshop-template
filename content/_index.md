@@ -13,11 +13,11 @@ chapter: false
 {{% /notice %}}
 
 ### Student Information:
-&emsp; **Full Name:** Nguyen Van A
+&emsp; **Full Name:** Tong Gia Khanh
 
-&emsp; **Phone Number:** 0989888999 
+&emsp; **Phone Number:** 0979255267 
 
-&emsp; **Email:** Anguyenvan@gmail.com
+&emsp; **Email:** 23110032@student.hcmute.edu.vn
 
 &emsp; **University:** Ho Chi Minh City University of Technology and Education
 
@@ -29,7 +29,7 @@ chapter: false
 
 &emsp; **Internship Position:** Workforce Bootcamp - First Cloud AI Journey
 
-&emsp; **Internship Duration:** From 12/08/2025 to 12/11/2025
+&emsp; **Internship Duration:** From 01/01/2026 to 01/12/2026
 
 ![Your profile picture](/images/avatar.png)
 
