@@ -10,9 +10,9 @@ Worklog ghi nhận lại tiến độ thực tập chi tiết theo từng tuần
 
 * **Tuần 1:** [Làm quen với AWS và các dịch vụ cơ bản trong AWS (EC2, EBS, AWS CLI)](1.1-week1/)
 * **Tuần 2:** [AWS IAM, VPC Networking, Custom VPC và quản lý tài nguyên mạng](1.2-week2/)
-* **Tuần 3:** [Worklog Tuần 3](1.3-week3/)
-* **Tuần 4:** [Worklog Tuần 4](1.4-week4/)
-* **Tuần 5:** [Worklog Tuần 5](1.5-week5/)
+* **Tuần 3:** [Dịch vụ lưu trữ AWS (S3, EBS, EFS), Amazon RDS và kết nối EC2 - RDS](1.3-week3/)
+* **Tuần 4:** [Giám sát AWS (CloudWatch), Bảo mật, Systems Manager, CI/CD và Tối ưu chi phí](1.4-week4/)
+* **Tuần 5:** [Điện toán Serverless (Lambda, API Gateway), Kiến trúc Event-Driven (SQS, SNS) và Microservices](1.5-week5/)
 * **Tuần 6:** [Worklog Tuần 6](1.6-week6/)
 * **Tuần 7:** [Worklog Tuần 7](1.7-week7/)
 * **Tuần 8:** [Worklog Tuần 8](1.8-week8/)
