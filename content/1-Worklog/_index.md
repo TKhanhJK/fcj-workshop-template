@@ -13,7 +13,7 @@ The Worklog records detailed weekly internship progress throughout the **First C
 * **Week 3:** [AWS Storage (S3, EBS, EFS), Amazon RDS, and EC2-RDS Connectivity](1.3-week3/)
 * **Week 4:** [AWS Observability (CloudWatch), Security, Systems Manager, CI/CD, and Cost Optimization](1.4-week4/)
 * **Week 5:** [Serverless Computing (Lambda, API Gateway), Event-Driven Architecture (SQS, SNS), and Microservices](1.5-week5/)
-* **Week 6:** [Week 6 Worklog](1.6-week6/)
+* **Week 6:** [Scalability & High Availability (Auto Scaling, ALB), Route 53, and CloudFront CDN](1.6-week6/)
 * **Week 7:** [Week 7 Worklog](1.7-week7/)
 * **Week 8:** [Week 8 Worklog](1.8-week8/)
 * **Week 9:** [Week 9 Worklog](1.9-week9/)
