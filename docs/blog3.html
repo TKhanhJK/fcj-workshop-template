@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Technical comparison between AWS Security Groups and Network Access Control Lists (NACLs), explaining stateful vs stateless traffic filtering and defense-in-depth.">
+  <meta name="author" content="Tong Gia Khanh">
+  <title>Security Groups vs Network ACLs | FCAJ</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Reading Progress Bar -->
+  <div id="reading-progress" aria-hidden="true"></div>
+
+  <!-- Accessibility Skip Link -->
+  <a href="#article-body" class="skip-to-content">Skip to main content</a>
+
+  <!-- Navigation Bar -->
+  <header class="navbar" role="banner">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo" aria-label="FCAJ Journey Home">
+        <div class="nav-logo-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+          </svg>
+        </div>
+        <span>FCAJ<span class="accent">.</span>Journey</span>
+      </a>
+
+      <button class="mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="primary-nav">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <nav id="primary-nav" aria-label="Primary navigation">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="index.html#blogs" class="nav-link active">Blogs</a></li>
+          <li><a href="index.html#worklogs" class="nav-link">Worklogs</a></li>
+          <li><a href="index.html#about" class="nav-link">About</a></li>
+          <li>
+            <a href="https://github.com/TKhanhJK/fcj-workshop-template" target="_blank" rel="noopener noreferrer" class="nav-cta">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+              <span>GitHub</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Article Container -->
+  <main class="article-page" id="article-body">
+    <div class="article-container">
+
+      <!-- Breadcrumbs -->
+      <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+        <a href="index.html">Home</a>
+        <span>/</span>
+        <a href="index.html#blogs">Blogs</a>
+        <span>/</span>
+        <span aria-current="page">Security Groups vs Network ACLs</span>
+      </nav>
+
+      <!-- Article Header -->
+      <header class="article-header">
+        <div class="article-meta">
+          <span class="badge badge-orange">AWS</span>
+          <span class="badge badge-blue">Security</span>
+          <span class="badge badge-gray">Networking</span>
+          <span style="font-size: 0.85rem; color: var(--text-muted); margin-left: auto;">5 min read</span>
+        </div>
+        <h1 class="article-title">Security Groups vs Network ACLs</h1>
+        <p class="article-summary">
+          Understanding the differences between Security Groups and Network Access Control Lists (NACLs) and how they cooperate to enforce defense-in-depth across AWS networks.
+        </p>
+      </header>
+
+      <!-- Article Content -->
+      <article class="article-content">
+
+        <!-- 1. Introduction -->
+        <h2>1. Introduction</h2>
+        <p>
+          When securing cloud networks inside an Amazon VPC, security cannot be implemented as a single perimeter barrier. Instead, AWS employs a layered <strong>Defense-in-Depth</strong> security model.
+        </p>
+        <p>
+          At the core of this model are two distinct firewall mechanisms: <strong>Security Groups (SGs)</strong> and <strong>Network Access Control Lists (NACLs)</strong>. While both filter inbound and outbound IP traffic, they operate at completely different network boundaries, utilize different evaluation logic, and serve complementary architectural roles.
+        </p>
+
+        <!-- 2. Key Points to Know -->
+        <h2>2. Key Points to Know</h2>
+
+        <div class="key-points-grid">
+          <div class="key-point-item">
+            <div class="key-point-name">Security Group</div>
+            <div class="key-point-desc">Virtual firewall operating at the Elastic Network Interface (ENI) / instance level.</div>
+          </div>
+          <div class="key-point-item">
+            <div class="key-point-name">Network ACL</div>
+            <div class="key-point-desc">Subnet-level boundary firewall filtering all traffic entering or leaving an entire subnet.</div>
+          </div>
+          <div class="key-point-item">
+            <div class="key-point-name">Stateful</div>
+            <div class="key-point-desc">Automatically remembers active connections; return response traffic is automatically allowed.</div>
+          </div>
+          <div class="key-point-item">
+            <div class="key-point-name">Stateless</div>
+            <div class="key-point-desc">Does not track connection state; responses must be explicitly permitted by corresponding rules.</div>
+          </div>
+          <div class="key-point-item">
+            <div class="key-point-name">Rule Numbers</div>
+            <div class="key-point-desc">NACL rules evaluate in ascending numerical order (e.g., 100, 200); first match applies.</div>
+          </div>
+          <div class="key-point-item">
+            <div class="key-point-name">Ephemeral Ports</div>
+            <div class="key-point-desc">Short-lived client ports (typically 1024–65535) required for stateless NACL return communications.</div>
+          </div>
+        </div>
+
+        <!-- 3. What is a Security Group? -->
+        <h2>3. What is a Security Group?</h2>
+        <p>
+          A <strong>Security Group</strong> acts as a virtual firewall for your EC2 instances to control incoming and outgoing traffic. Security groups are attached to the instance's <strong>Elastic Network Interface (ENI)</strong>, not the instance hardware itself or the subnet.
+        </p>
+        <p>
+          Key characteristics of Security Groups:
+        </p>
+        <ul>
+          <li><strong>Stateful Filtering:</strong> If an inbound request is permitted (e.g., HTTP on port 80), the outbound response traffic is <em>automatically allowed</em> to return to the client, regardless of outbound security group rules.</li>
+          <li><strong>Allow Rules Only:</strong> You cannot create explicit "Deny" rules. Everything is blocked by default until an explicit "Allow" rule is defined.</li>
+          <li><strong>Security Group Referencing:</strong> Instead of hardcoding CIDR IP addresses, a Security Group can reference another Security Group ID as a source or destination (e.g., allowing port 3306 only from <code>sg-web-servers</code>).</li>
+        </ul>
+
+        <!-- 4. What is a Network ACL? -->
+        <h2>4. What is a Network ACL?</h2>
+        <p>
+          A <strong>Network Access Control List (NACL)</strong> is an optional layer of security for your VPC that acts as a firewall for controlling traffic in and out of one or more subnets.
+        </p>
+        <p>
+          Key characteristics of Network ACLs:
+        </p>
+        <ul>
+          <li><strong>Stateless Filtering:</strong> NACLs have no memory of request state. If inbound port 443 is allowed, outbound responses will be dropped unless you explicitly configure an outbound NACL rule permitting traffic to ephemeral client ports (<code>1024–65535</code>).</li>
+          <li><strong>Allow and Deny Rules:</strong> You can explicitly write rules that <strong>Deny</strong> specific IP addresses or CIDR ranges (ideal for blocking compromised hosts or malicious scanners).</li>
+          <li><strong>Numbered Evaluation:</strong> Rules are processed in ascending numerical order (e.g., rule 10 is evaluated before rule 20). As soon as a rule matches traffic, it is applied immediately without evaluating subsequent rules.</li>
+        </ul>
+
+        <!-- 5. Comparison Table -->
+        <h2>5. Comparison Table</h2>
+        <p>Here is a side-by-side technical breakdown of both technologies:</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th scope="col">Feature</th>
+                <th scope="col">Security Group</th>
+                <th scope="col">Network ACL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Operating Level</strong></td>
+                <td>Instance / ENI level</td>
+                <td>Subnet boundary level</td>
+              </tr>
+              <tr>
+                <td><strong>State Mechanism</strong></td>
+                <td><strong>Stateful</strong> (return traffic automatically permitted)</td>
+                <td><strong>Stateless</strong> (return traffic must be explicitly permitted)</td>
+              </tr>
+              <tr>
+                <td><strong>Rule Actions</strong></td>
+                <td>Supports <code>ALLOW</code> rules only</td>
+                <td>Supports both <code>ALLOW</code> and <code>DENY</code> rules</td>
+              </tr>
+              <tr>
+                <td><strong>Rule Processing</strong></td>
+                <td>All rules evaluated together before decision</td>
+                <td>Evaluated in order of lowest rule number first</td>
+              </tr>
+              <tr>
+                <td><strong>Ephemeral Ports</strong></td>
+                <td>Handled automatically by connection tracking</td>
+                <td>Must explicitly configure outbound port 1024–65535</td>
+              </tr>
+              <tr>
+                <td><strong>Default Behavior (Custom)</strong></td>
+                <td>Deny all inbound, allow all outbound</td>
+                <td>Deny all inbound and all outbound</td>
+              </tr>
+              <tr>
+                <td><strong>Target Referencing</strong></td>
+                <td>Can specify IP CIDRs or other Security Group IDs</td>
+                <td>Only supports IP CIDR blocks (cannot reference other NACLs)</td>
+              </tr>
+              <tr>
+                <td><strong>Primary Architectural Use</strong></td>
+                <td>Granular application and service-level micro-segmentation</td>
+                <td>Subnet perimeter protection & quick IP blocking</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 6. Layered Architecture Flow -->
+        <h2>6. Layered Architecture Flow</h2>
+        <p>
+          When an external packet arrives from the Internet intended for an EC2 web server, it traverses through both boundaries in sequence:
+        </p>
+
+        <div class="flow-diagram-container">
+          <div class="flow-diagram-header">
+            <span>INBOUND TRAFFIC PACKET INSPECTION ORDER</span>
+            <span class="badge badge-orange">DEFENSE IN DEPTH</span>
+          </div>
+          <div class="flow-step-row">
+            <div class="flow-box">Internet Source<br><small style="color:#38bdf8;">Client request</small></div>
+            <div class="flow-arrow-icon">→</div>
+            <div class="flow-box highlight">Subnet Boundary<br><strong style="color:#fb923c;">Network ACL</strong><br><small style="color:#94a3b8;">Evaluated 1st</small></div>
+            <div class="flow-arrow-icon">→ (If Allowed)</div>
+            <div class="flow-box highlight">Instance ENI<br><strong style="color:#fcd34d;">Security Group</strong><br><small style="color:#94a3b8;">Evaluated 2nd</small></div>
+            <div class="flow-arrow-icon">→ (If Allowed)</div>
+            <div class="flow-box" style="border-color:#10b981;">EC2 Instance<br><small style="color:#34d399;">Web Process</small></div>
+          </div>
+        </div>
+
+        <p>
+          Conversely, when the EC2 instance responds, the packet passes the <strong>Security Group</strong> automatically (because it is stateful), but it <strong>must be explicitly allowed by the Outbound Network ACL</strong> before leaving the subnet.
+        </p>
+
+        <!-- 7. When to Use Each -->
+        <h2>7. When to Use Each</h2>
+        <ul>
+          <li>
+            <strong>Use Security Groups for standard daily security:</strong>
+            Use SGs to restrict access to applications based on specific ports (e.g., port 443 for web, port 22 for administrative bastion access). Take advantage of security group referencing so database tiers only accept packets from authorized application server security groups.
+          </li>
+          <li>
+            <strong>Use Network ACLs for coarse-grained perimeter control:</strong>
+            Use NACLs when you need to immediately block a known malicious IP address or subnet attacking your application (using an explicit <code>DENY</code> rule). NACLs are also used to satisfy compliance mandates requiring strict subnet-level isolation.
+          </li>
+        </ul>
+
+        <!-- 8. Security Best Practices -->
+        <h2>8. Security Best Practices</h2>
+        <div class="callout callout-blue">
+          <div class="callout-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            Key Recommendations for AWS Architects:
+          </div>
+          <ul>
+            <li><strong>Keep NACLs simple:</strong> Overcomplicating stateless NACL rules can lead to hard-to-diagnose connectivity drops due to ephemeral port oversights. Rely on the Default NACL (allow all) unless you have explicit subnet isolation or blocking needs.</li>
+            <li><strong>Strict Security Group Ingress:</strong> Never open administrative ports (SSH 22, RDP 3389) to <code>0.0.0.0/0</code>. Restrict access to a corporate VPN or use AWS Systems Manager Session Manager instead.</li>
+            <li><strong>Chain Security Groups:</strong> In multi-tier designs, configure backend tiers (RDS / Caches) with ingress rules referencing the Security Group of the web tier, rather than static IP CIDRs.</li>
+          </ul>
+        </div>
+
+        <!-- 9. Key Takeaways -->
+        <h2>9. Key Takeaways</h2>
+        <ul>
+          <li><strong>Security Groups</strong> are <em>stateful</em> and operate at the <em>instance / ENI</em> level with <code>ALLOW</code> rules only.</li>
+          <li><strong>Network ACLs</strong> are <em>stateless</em> and operate at the <em>subnet</em> level with both <code>ALLOW</code> and <code>DENY</code> rules.</li>
+          <li>Because NACLs are stateless, return traffic requires corresponding outbound rules for <strong>ephemeral ports (1024–65535)</strong>.</li>
+          <li>Inbound traffic is evaluated by <strong>Network ACLs first</strong>, followed by <strong>Security Groups second</strong>.</li>
+          <li>Together, SGs and NACLs provide a robust, layered defense protecting cloud workloads from perimeter to host.</li>
+        </ul>
+
+        <!-- 10. References -->
+        <h2>10. References</h2>
+        <ul>
+          <li>
+            <a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html" target="_blank" rel="noopener noreferrer">Amazon VPC User Guide — Control traffic to resources using security groups</a>
+          </li>
+          <li>
+            <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html" target="_blank" rel="noopener noreferrer">Amazon VPC User Guide — Control traffic to subnets using network ACLs</a>
+          </li>
+        </ul>
+
+      </article>
+
+      <!-- Article Footer Navigation -->
+      <footer class="article-footer-nav">
+        <a href="blog2.html" class="btn btn-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Previous: IAM Role for EC2</span>
+        </a>
+        <a href="index.html#blogs" class="btn btn-primary">
+          <span>Back to Blogs Overview</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </footer>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h3>FCAJ Journey</h3>
+          <p>Learning AWS • Building Cloud Skills</p>
+        </div>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#blogs">Blogs</a></li>
+          <li><a href="index.html#worklogs">Worklogs</a></li>
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="https://github.com/TKhanhJK/fcj-workshop-template" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Tong Gia Khanh. Built for my FCAJ learning journey.</p>
+        <p style="color:var(--text-light-muted);">Deployed via GitHub Pages</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

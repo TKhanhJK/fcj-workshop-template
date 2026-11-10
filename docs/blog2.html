@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Technical guide on using AWS IAM Roles for Amazon EC2 to securely access AWS services like Amazon S3 without hardcoding static credentials.">
+  <meta name="author" content="Tong Gia Khanh">
+  <title>IAM Role for EC2: Secure Access to AWS Services | FCAJ</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Reading Progress Bar -->
+  <div id="reading-progress" aria-hidden="true"></div>
+
+  <!-- Accessibility Skip Link -->
+  <a href="#article-body" class="skip-to-content">Skip to main content</a>
+
+  <!-- Navigation Bar -->
+  <header class="navbar" role="banner">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo" aria-label="FCAJ Journey Home">
+        <div class="nav-logo-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+          </svg>
+        </div>
+        <span>FCAJ<span class="accent">.</span>Journey</span>
+      </a>
+
+      <button class="mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="primary-nav">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <nav id="primary-nav" aria-label="Primary navigation">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="index.html#blogs" class="nav-link active">Blogs</a></li>
+          <li><a href="index.html#worklogs" class="nav-link">Worklogs</a></li>
+          <li><a href="index.html#about" class="nav-link">About</a></li>
+          <li>
+            <a href="https://github.com/TKhanhJK/fcj-workshop-template" target="_blank" rel="noopener noreferrer" class="nav-cta">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+              <span>GitHub</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Article Container -->
+  <main class="article-page" id="article-body">
+    <div class="article-container">
+
+      <!-- Breadcrumbs -->
+      <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+        <a href="index.html">Home</a>
+        <span>/</span>
+        <a href="index.html#blogs">Blogs</a>
+        <span>/</span>
+        <span aria-current="page">IAM Role for EC2</span>
+      </nav>
+
+      <!-- Article Header -->
+      <header class="article-header">
+        <div class="article-meta">
+          <span class="badge badge-orange">AWS</span>
+          <span class="badge badge-blue">IAM</span>
+          <span class="badge badge-gray">EC2 Security</span>
+          <span style="font-size: 0.85rem; color: var(--text-muted); margin-left: auto;">6 min read</span>
+        </div>
+        <h1 class="article-title">IAM Role for EC2: Secure Access to AWS Services</h1>
+        <p class="article-summary">
+          Understanding how IAM Roles allow EC2 instances to access AWS services securely without storing long-term credentials or risking key leakage.
+        </p>
+      </header>
+
+      <!-- Article Content -->
+      <article class="article-content">
+
+        <!-- 1. Introduction -->
+        <h2>1. Introduction</h2>
+        <p>
+          Applications running on Amazon Elastic Compute Cloud (Amazon EC2) frequently need to communicate with other AWS resources—such as reading configuration files from <strong>Amazon S3</strong>, writing logs to <strong>Amazon CloudWatch</strong>, or updating records in <strong>Amazon DynamoDB</strong>.
+        </p>
+        <p>
+          In the past, developers often pasted static long-term access keys (<code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code>) into codebases, environment configuration files, or local files on the server. This practice is a severe security vulnerability. If credentials are leaked, compromised, or committed into public version control, the entire AWS account is placed at risk.
+        </p>
+        <p>
+          AWS resolves this challenge elegantly through <strong>IAM Roles for Amazon EC2</strong>, which deliver automatically rotated, temporary security credentials directly to the instance.
+        </p>
+
+        <!-- 2. Key Points to Know -->
+        <h2>2. Key Points to Know</h2>
+
+        <div class="key-points-grid">
+          <div class="key-point-item">
+            <div class="key-point-name">IAM Role</div>
+            <div class="key-point-desc">An identity with permission policies that can be assumed by trusted entities or AWS services.</div>
+          </div>
+          <div class="key-point-item">
+            <div class="key-point-name">IAM Policy</div>
+            <div class="key-point-desc">A JSON document defining explicit Allow/Deny permissions on specific AWS actions and resources.</div>
+          </div>
+          <div class="key-point-item">
+            <div class="key-point-name">Instance Profile</div>
+            <div class="key-point-desc">A container that passes an IAM role to an Amazon EC2 instance upon launch or runtime.</div>
+          </div>
+          <div class="key-point-item">
+            <div class="key-point-name">AWS STS</div>
+            <div class="key-point-desc">Security Token Service: generates short-lived, cryptographically signed temporary credentials.</div>
+          </div>
+          <div class="key-point-item">
+            <div class="key-point-name">Temporary Credentials</div>
+            <div class="key-point-desc">Short-lived credentials that automatically expire and rotate without requiring manual intervention.</div>
+          </div>
+          <div class="key-point-item">
+            <div class="key-point-name">IMDSv2</div>
+            <div class="key-point-desc">Instance Metadata Service version 2; uses session-oriented tokens to mitigate SSRF attacks.</div>
+          </div>
+        </div>
+
+        <!-- 3. What is an IAM Role? -->
+        <h2>3. What is an IAM Role?</h2>
+        <p>
+          An <strong>IAM Role</strong> is an AWS Identity and Access Management identity that you can create in your account that has specific permissions. It is similar to an IAM user, but instead of being uniquely associated with one person, a role is intended to be <strong>assumed</strong> by anyone or anything that needs it—including applications, services, or cross-account entities.
+        </p>
+        <p>
+          Crucially, an IAM role does not have long-term credentials (passwords or access keys) attached to it. Instead, when an entity assumes a role, AWS STS issues temporary security credentials that are valid for a configurable window (typically 1 hour for EC2 roles).
+        </p>
+
+        <!-- 4. Why Should EC2 Use IAM Roles? -->
+        <h2>4. Why Should EC2 Use IAM Roles?</h2>
+        <p>
+          Attaching an IAM Role to an EC2 instance eliminates the root causes of credential leakage:
+        </p>
+        <ul>
+          <li><strong>Zero Hardcoded Credentials:</strong> No keys in configuration files, Git repositories, or AMI snapshots.</li>
+          <li><strong>Automated Rotation:</strong> AWS automatically rotates the temporary keys before they expire; developers do not have to write rotation scripts.</li>
+          <li><strong>Granular Control:</strong> Permissions can be updated instantaneously in IAM without restarting the EC2 instance or redeploying code.</li>
+          <li><strong>Auditing & Compliance:</strong> AWS CloudTrail records all API calls with the assumed role session, providing transparent compliance logs.</li>
+        </ul>
+
+        <!-- 5. IAM User Credentials vs IAM Role -->
+        <h2>5. IAM User Credentials vs IAM Role</h2>
+        <p>The differences between managing static keys versus using dynamic IAM Roles highlight why IAM Roles are mandatory in modern cloud engineering:</p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th scope="col">Feature</th>
+                <th scope="col">Static IAM User Keys</th>
+                <th scope="col">EC2 IAM Role</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Credential Lifespan</strong></td>
+                <td>Permanent until manually revoked or deleted.</td>
+                <td>Temporary (auto-rotated every few hours by AWS).</td>
+              </tr>
+              <tr>
+                <td><strong>Storage Location</strong></td>
+                <td>Hardcoded in disk files (<code>~/.aws/credentials</code>) or code.</td>
+                <td>Streamed securely in-memory via Instance Metadata Service.</td>
+              </tr>
+              <tr>
+                <td><strong>Risk of Leakage</strong></td>
+                <td>Very High (easy to leak through Git commits or server breaches).</td>
+                <td>Extremely Low (short lifespan; unusable outside AWS session).</td>
+              </tr>
+              <tr>
+                <td><strong>Maintenance Overhead</strong></td>
+                <td>High (manual rotation, deployment updates across instances).</td>
+                <td>Zero (managed transparently by AWS STS and AWS SDKs).</td>
+              </tr>
+              <tr>
+                <td><strong>AWS Well-Architected Best Practice</strong></td>
+                <td>Strictly discouraged for EC2 workloads.</td>
+                <td>Recommended standard for all compute resources.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 6. How EC2 Uses an IAM Role -->
+        <h2>6. How EC2 Uses an IAM Role</h2>
+        <p>
+          The underlying mechanism of how an EC2 instance acquires and utilizes temporary credentials consists of four straightforward steps:
+        </p>
+        <ol>
+          <li>
+            <strong>Instance Profile Attachment:</strong> An IAM Role is wrapped in an <em>Instance Profile</em> and attached to the EC2 instance via the AWS Console or CLI.
+          </li>
+          <li>
+            <strong>Querying Instance Metadata (IMDS):</strong> When an application initiates an AWS API call, the AWS SDK queries the local link-local metadata address at <code>http://169.254.169.254/latest/meta-data/iam/security-credentials/&lt;role-name&gt;</code>.
+          </li>
+          <li>
+            <strong>STS Token Generation:</strong> AWS STS creates a temporary credential tuple containing:
+            <ul>
+              <li><code>AccessKeyId</code></li>
+              <li><code>SecretAccessKey</code></li>
+              <li><code>Token</code> (session token)</li>
+              <li><code>Expiration</code></li>
+            </ul>
+          </li>
+          <li>
+            <strong>SDK Automatic Handling:</strong> The official AWS SDKs (Boto3, AWS SDK for JavaScript/Go/Java) automatically detect, inject, and refresh these credentials before expiration seamlessly behind the scenes.
+          </li>
+        </ol>
+
+        <!-- 7. Architecture Diagram -->
+        <h2>7. Architecture Diagram</h2>
+        <p>The diagram below traces the end-to-end authorization chain from the EC2 instance to Amazon S3:</p>
+
+        <div class="flow-diagram-container">
+          <div class="flow-diagram-header">
+            <span>IAM ROLE AUTHORIZATION FLOW</span>
+            <span class="badge badge-orange">TEMPORARY CREDENTIALS</span>
+          </div>
+          <div class="flow-step-row">
+            <div class="flow-box">EC2 Instance<br><small style="color:#38bdf8;">App running code</small></div>
+            <div class="flow-arrow-icon">→ assumes</div>
+            <div class="flow-box highlight">IAM Role<br><small style="color:#fb923c;">AppS3ReadOnlyRole</small></div>
+            <div class="flow-arrow-icon">→ governed by</div>
+            <div class="flow-box highlight">IAM Policy<br><small style="color:#fcd34d;">s3:GetObject allow</small></div>
+            <div class="flow-arrow-icon">→ accesses</div>
+            <div class="flow-box" style="border-color:#10b981;">Amazon S3<br><small style="color:#34d399;">Bucket data</small></div>
+          </div>
+        </div>
+
+        <!-- 8. Practical Example -->
+        <h2>8. Practical Example: Accessing S3 Without Keys</h2>
+        <p>
+          Below is a sample Python snippet using the AWS SDK (<code>boto3</code>). Notice that <strong>no access keys are specified</strong> in the code:
+        </p>
+
+        <pre class="code-block"><code>import boto3
+
+# Boto3 automatically retrieves temporary credentials
+# from the EC2 Instance Metadata Service (IMDS)
+s3 = boto3.client('s3')
+
+bucket_name = 'fcaj-learning-bucket-2026'
+
+try:
+    response = s3.list_objects_v2(Bucket=bucket_name)
+    print(f"Successfully connected to {bucket_name} using IAM Role!")
+    for item in response.get('Contents', []):
+        print(f" - Found file: {item['Key']}")
+except Exception as e:
+    print(f"Access error: {e}")</code></pre>
+
+        <p>
+          Likewise, running the command <code class="inline-code">aws s3 ls</code> in the terminal of the EC2 instance succeeds immediately without ever executing <code class="inline-code">aws configure</code>.
+        </p>
+
+        <!-- 9. Security Best Practices -->
+        <h2>9. Security Best Practices</h2>
+        <div class="callout callout-blue">
+          <div class="callout-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            Essential IAM Hardening Rules:
+          </div>
+          <ul>
+            <li><strong>Principle of Least Privilege:</strong> Never attach full administrator access (e.g., <code>AdministratorAccess</code>) to an EC2 instance. Only permit exact actions (e.g., <code>s3:GetObject</code>) on specific ARNs.</li>
+            <li><strong>Enforce IMDSv2:</strong> Disable IMDSv1 on EC2 instances by configuring <code class="inline-code">HttpTokens=required</code>. IMDSv2 requires a session token and protects against Server-Side Request Forgery (SSRF).</li>
+            <li><strong>Separate Roles by Workload:</strong> Web tier instances and database processing workers should use separate IAM roles with dedicated, distinct policies.</li>
+          </ul>
+        </div>
+
+        <!-- 10. Key Takeaways -->
+        <h2>10. Key Takeaways</h2>
+        <ul>
+          <li><strong>Never hardcode static AWS credentials</strong> inside EC2 instances, source code, or AMIs.</li>
+          <li><strong>IAM Roles</strong> provide secure, temporary, and automatically rotating credentials issued by AWS STS.</li>
+          <li>The <strong>AWS SDK and CLI</strong> natively know how to fetch credentials from the Instance Metadata Service without custom code.</li>
+          <li>Updating an IAM Role policy immediately takes effect across all attached EC2 instances without requiring restarts.</li>
+          <li>Applying <strong>Least Privilege</strong> and enforcing <strong>IMDSv2</strong> guarantees compliance with the AWS Well-Architected Security Pillar.</li>
+        </ul>
+
+        <!-- 11. References -->
+        <h2>11. References</h2>
+        <ul>
+          <li>
+            <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html" target="_blank" rel="noopener noreferrer">AWS IAM User Guide — IAM Roles</a>
+          </li>
+          <li>
+            <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/iam-roles-for-amazon-ec2.html" target="_blank" rel="noopener noreferrer">Amazon EC2 User Guide — IAM Roles for Amazon EC2</a>
+          </li>
+          <li>
+            <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html" target="_blank" rel="noopener noreferrer">Amazon EC2 User Guide — Configuring the Instance Metadata Service (IMDSv2)</a>
+          </li>
+        </ul>
+
+      </article>
+
+      <!-- Article Footer Navigation -->
+      <footer class="article-footer-nav">
+        <a href="blog1.html" class="btn btn-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Previous: AWS VPC</span>
+        </a>
+        <a href="blog3.html" class="btn btn-primary">
+          <span>Next: Security Groups vs Network ACLs</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </footer>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h3>FCAJ Journey</h3>
+          <p>Learning AWS • Building Cloud Skills</p>
+        </div>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#blogs">Blogs</a></li>
+          <li><a href="index.html#worklogs">Worklogs</a></li>
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="https://github.com/TKhanhJK/fcj-workshop-template" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Tong Gia Khanh. Built for my FCAJ learning journey.</p>
+        <p style="color:var(--text-light-muted);">Deployed via GitHub Pages</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

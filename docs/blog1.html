@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Technical guide on Amazon VPC fundamentals, comparing Public Subnets, Private Subnets, Route Tables, and Internet Gateway connectivity.">
+  <meta name="author" content="Tong Gia Khanh">
+  <title>AWS VPC: Public Subnet, Private Subnet and Internet Gateway | FCAJ</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Reading Progress Bar -->
+  <div id="reading-progress" aria-hidden="true"></div>
+
+  <!-- Accessibility Skip Link -->
+  <a href="#article-body" class="skip-to-content">Skip to main content</a>
+
+  <!-- Navigation Bar -->
+  <header class="navbar" role="banner">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo" aria-label="FCAJ Journey Home">
+        <div class="nav-logo-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+          </svg>
+        </div>
+        <span>FCAJ<span class="accent">.</span>Journey</span>
+      </a>
+
+      <button class="mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="primary-nav">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <nav id="primary-nav" aria-label="Primary navigation">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="index.html#blogs" class="nav-link active">Blogs</a></li>
+          <li><a href="index.html#worklogs" class="nav-link">Worklogs</a></li>
+          <li><a href="index.html#about" class="nav-link">About</a></li>
+          <li>
+            <a href="https://github.com/TKhanhJK/fcj-workshop-template" target="_blank" rel="noopener noreferrer" class="nav-cta">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+              <span>GitHub</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Article Container -->
+  <main class="article-page" id="article-body">
+    <div class="article-container">
+
+      <!-- Breadcrumbs -->
+      <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+        <a href="index.html">Home</a>
+        <span>/</span>
+        <a href="index.html#blogs">Blogs</a>
+        <span>/</span>
+        <span aria-current="page">AWS VPC Fundamentals</span>
+      </nav>
+
+      <!-- Article Header -->
+      <header class="article-header">
+        <div class="article-meta">
+          <span class="badge badge-orange">AWS</span>
+          <span class="badge badge-blue">VPC</span>
+          <span class="badge badge-gray">Networking</span>
+          <span style="font-size: 0.85rem; color: var(--text-muted); margin-left: auto;">5 min read</span>
+        </div>
+        <h1 class="article-title">AWS VPC: Public Subnet, Private Subnet and Internet Gateway</h1>
+        <p class="article-summary">
+          Understanding the fundamentals of Amazon VPC, subnet segmentation, routing behaviors, and how resources securely connect to the Internet.
+        </p>
+      </header>
+
+      <!-- Article Content -->
+      <article class="article-content">
+
+        <!-- 1. Introduction -->
+        <h2>1. Introduction</h2>
+        <p>
+          In cloud architecture, network isolation and traffic control represent the foundational line of defense. <strong>Amazon Virtual Private Cloud (Amazon VPC)</strong> is the core networking foundation of AWS. It allows you to provision a logically isolated section of the AWS Cloud where you can launch AWS resources in a virtual network that you define.
+        </p>
+        <p>
+          Without a firm grasp of VPC constructs—specifically subnets, route tables, and gateways—securing workloads, preventing unauthorized ingress, and designing scalable multi-tier architectures becomes nearly impossible.
+        </p>
+
+        <!-- 2. Key Points to Know -->
+        <h2>2. Key Points to Know</h2>
+        <p>Before designing networks, engineers must be familiar with eight fundamental networking primitives:</p>
+
+        <div class="key-points-grid">
+          <div class="key-point-item">
+            <div class="key-point-name">Amazon VPC</div>
+            <div class="key-point-desc">Your dedicated, logically isolated virtual network across an AWS Region.</div>
+          </div>
+          <div class="key-point-item">
+            <div class="key-point-name">CIDR Block</div>
+            <div class="key-point-desc">Classless Inter-Domain Routing range defining the total IP address pool (e.g., <code>10.0.0.0/16</code>).</div>
+          </div>
+          <div class="key-point-item">
+            <div class="key-point-name">Subnet</div>
+            <div class="key-point-desc">A contiguous range of IP addresses within a VPC, tied to a single Availability Zone.</div>
+          </div>
+          <div class="key-point-item">
+            <div class="key-point-name">Public Subnet</div>
+            <div class="key-point-desc">A subnet whose route table directs default Internet traffic (<code>0.0.0.0/0</code>) to an Internet Gateway.</div>
+          </div>
+          <div class="key-point-item">
+            <div class="key-point-name">Private Subnet</div>
+            <div class="key-point-desc">A subnet with no direct route to an Internet Gateway; isolates internal databases/services.</div>
+          </div>
+          <div class="key-point-item">
+            <div class="key-point-name">Internet Gateway (IGW)</div>
+            <div class="key-point-desc">A horizontally scaled, redundant VPC component facilitating direct IPv4/IPv6 Internet communication.</div>
+          </div>
+          <div class="key-point-item">
+            <div class="key-point-name">Route Table</div>
+            <div class="key-point-desc">A set of rules (routes) that determines where network traffic from subnets or gateways is directed.</div>
+          </div>
+          <div class="key-point-item">
+            <div class="key-point-name">Availability Zone (AZ)</div>
+            <div class="key-point-desc">One or more discrete data centers with redundant power and networking in an AWS Region.</div>
+          </div>
+        </div>
+
+        <!-- 3. What is Amazon VPC? -->
+        <h2>3. What is Amazon VPC?</h2>
+        <p>
+          Simply put, an <strong>Amazon VPC</strong> is your own private datacenter inside AWS. When you create a VPC, you assign a primary IPv4 CIDR block (ranging from <code>/16</code> to <code>/28</code>).
+        </p>
+        <p>
+          Technically, AWS manages the underlying SDN (Software-Defined Networking). All communication within the VPC CIDR uses an implicit local route that cannot be deleted. You have complete control over IP address selection, subnet creation, routing tables, and network security gateways.
+        </p>
+
+        <!-- 4. Public Subnet vs Private Subnet -->
+        <h2>4. Public Subnet vs Private Subnet</h2>
+        <p>
+          The distinction between a public and private subnet is determined solely by its <strong>Route Table association</strong>:
+        </p>
+
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th scope="col">Feature</th>
+                <th scope="col">Public Subnet</th>
+                <th scope="col">Private Subnet</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Internet Connectivity</strong></td>
+                <td>Direct bidirectional access to the Internet.</td>
+                <td>No direct inbound or outbound Internet route.</td>
+              </tr>
+              <tr>
+                <td><strong>Route Table Rule</strong></td>
+                <td>Contains route: <code>0.0.0.0/0</code> → <code>igw-xxxx</code></td>
+                <td>Only local route or route to a NAT Gateway / VPC Endpoint.</td>
+              </tr>
+              <tr>
+                <td><strong>IP Addressing</strong></td>
+                <td>Instances require both a Private IP and a Public / Elastic IP.</td>
+                <td>Instances only possess Private IPs from the subnet CIDR.</td>
+              </tr>
+              <tr>
+                <td><strong>Typical Resources</strong></td>
+                <td>Load Balancers (ALB), Bastion Hosts, Public Web Servers.</td>
+                <td>Databases (RDS), Backend APIs, Microservices, Caching (ElastiCache).</td>
+              </tr>
+              <tr>
+                <td><strong>Security Purpose</strong></td>
+                <td>Accept incoming external client traffic; public entry point.</td>
+                <td>Eliminates direct Internet attack surface for sensitive assets.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 5. Internet Gateway -->
+        <h2>5. Internet Gateway (IGW)</h2>
+        <p>
+          An <strong>Internet Gateway (IGW)</strong> serves two purposes: providing a target in your VPC route tables for Internet-routable traffic, and performing Network Address Translation (NAT) for instances assigned public IPv4 addresses.
+        </p>
+        <p>
+          It is fully managed by AWS, highly available, and horizontally scalable with no bandwidth bottlenecks.
+        </p>
+
+        <!-- Flow diagram -->
+        <div class="flow-diagram-container">
+          <div class="flow-diagram-header">
+            <span>PUBLIC SUBNET TRAFFIC FLOW TO INTERNET</span>
+            <span class="badge badge-orange">OUTBOUND ROUTING</span>
+          </div>
+          <div class="flow-step-row">
+            <div class="flow-box">EC2 Instance<br><small style="color:#94a3b8;">10.0.1.15</small></div>
+            <div class="flow-arrow-icon">→</div>
+            <div class="flow-box">Public Subnet<br><small style="color:#34d399;">10.0.1.0/24</small></div>
+            <div class="flow-arrow-icon">→</div>
+            <div class="flow-box highlight">Route Table<br><small style="color:#fcd34d;">0.0.0.0/0 → IGW</small></div>
+            <div class="flow-arrow-icon">→</div>
+            <div class="flow-box highlight">Internet Gateway<br><small style="color:#fb923c;">1:1 NAT mapping</small></div>
+            <div class="flow-arrow-icon">→</div>
+            <div class="flow-box" style="border-color:#38bdf8;">Public Internet<br><small style="color:#38bdf8;">Global Web</small></div>
+          </div>
+        </div>
+
+        <!-- 6. How Does an EC2 Instance in a Public Subnet Access the Internet? -->
+        <h2>6. How Does an EC2 Instance in a Public Subnet Access the Internet?</h2>
+        <p>
+          Launching an EC2 instance into a public subnet is not enough on its own. For an EC2 instance to successfully send and receive packets to and from the Internet, <strong>all five conditions</strong> must be satisfied:
+        </p>
+        <ol>
+          <li><strong>VPC Attachment:</strong> The VPC must have an Internet Gateway created and attached to it.</li>
+          <li><strong>Subnet Routing:</strong> The subnet's Route Table must explicitly declare a default route: <code>0.0.0.0/0</code> pointing to the Internet Gateway ID (<code>igw-xxxx</code>).</li>
+          <li><strong>Public IP Address:</strong> The EC2 instance must have an Auto-assigned Public IPv4 address or an Elastic IP (EIP) mapped to its private IP.</li>
+          <li><strong>Security Group Rules:</strong> The instance's Security Group must allow outbound traffic on desired ports (default is all outbound allowed) and appropriate inbound traffic.</li>
+          <li><strong>Network ACL Rules:</strong> Both Inbound and Outbound Network ACLs associated with the subnet must allow the corresponding traffic and ephemeral return ports (1024–65535).</li>
+        </ol>
+
+        <!-- 7. Why Use Private Subnets? -->
+        <h2>7. Why Use Private Subnets?</h2>
+        <p>
+          Exposing databases, message queues, or internal backend services directly to the public Internet creates an unnecessary attack vector. By positioning these workloads in a <strong>Private Subnet</strong>, they cannot be addressed directly from the Internet because they lack public IPs and route table paths to an IGW.
+        </p>
+        <p>
+          In a classic multi-tier architecture, public subnets act as an ingress gatekeeper (hosting reverse proxies or Application Load Balancers), which forward filtered requests down to private backend tiers:
+        </p>
+
+        <div class="flow-diagram-container">
+          <div class="flow-diagram-header">
+            <span>MULTI-TIER TRAFFIC PATTERN</span>
+            <span class="badge badge-blue">DEFENSE IN DEPTH</span>
+          </div>
+          <div class="flow-step-row">
+            <div class="flow-box" style="border-color:#38bdf8;">External Users</div>
+            <div class="flow-arrow-icon">↓</div>
+            <div class="flow-box highlight">Internet Gateway</div>
+            <div class="flow-arrow-icon">↓</div>
+            <div class="flow-box" style="border-color:#10b981;">Public Subnet<br><small style="color:#34d399;">Web / App Server</small></div>
+            <div class="flow-arrow-icon">↓ Private Traffic</div>
+            <div class="flow-box" style="border-color:#ec7211;">Private Subnet<br><small style="color:#fb923c;">Database (RDS)</small></div>
+          </div>
+        </div>
+
+        <!-- 8. Simple VPC Architecture Diagram -->
+        <h2>8. Simple VPC Architecture</h2>
+        <p>
+          Below is a visual representation of a clean 2-tier VPC architecture separating public web compute from private database persistence:
+        </p>
+
+        <div class="flow-diagram-container">
+          <div class="vpc-box-container">
+            <div class="vpc-box-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline; vertical-align:middle; margin-right:6px;"><rect x="2" y="2" width="20" height="20" rx="3"/></svg>
+              Amazon VPC (10.0.0.0/16) - Region: ap-southeast-1
+            </div>
+
+            <div style="text-align:center; margin-bottom:14px;">
+              <span class="badge badge-orange" style="font-size:0.8rem;">Attached: Internet Gateway (igw-0abc123)</span>
+            </div>
+
+            <div class="subnets-wrapper">
+              <!-- Public Subnet -->
+              <div class="subnet-box public">
+                <div class="subnet-title">
+                  <span>Public Subnet</span>
+                  <span>10.0.1.0/24 (AZ-a)</span>
+                </div>
+                <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:6px; margin-bottom:8px; font-size:0.85rem;">
+                  <strong>EC2 Web Instance</strong><br>
+                  Private IP: 10.0.1.50<br>
+                  Public IP: 54.x.x.x
+                </div>
+                <div style="font-size:0.75rem; color:#94a3b8;">
+                  Route Table: <code>0.0.0.0/0</code> → <code>igw-0abc123</code>
+                </div>
+              </div>
+
+              <!-- Private Subnet -->
+              <div class="subnet-box private">
+                <div class="subnet-title">
+                  <span>Private Subnet</span>
+                  <span>10.0.2.0/24 (AZ-a)</span>
+                </div>
+                <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:6px; margin-bottom:8px; font-size:0.85rem;">
+                  <strong>Amazon RDS Database</strong><br>
+                  Private IP: 10.0.2.100<br>
+                  No Public IP Assigned
+                </div>
+                <div style="font-size:0.75rem; color:#94a3b8;">
+                  Route Table: <code>10.0.0.0/16</code> → <code>local</code>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9. Practical Example -->
+        <h2>9. Practical Example: Secure 2-Tier Web Application</h2>
+        <p>
+          Consider a standard web application where end-users browse products and submit orders:
+        </p>
+        <ul>
+          <li><strong>Public Tier:</strong> An EC2 instance running Nginx resides in the Public Subnet (<code>10.0.1.0/24</code>). Its Security Group allows inbound HTTP (Port 80) and HTTPS (Port 443) from <code>0.0.0.0/0</code>.</li>
+          <li><strong>Private Tier:</strong> A PostgreSQL database on RDS resides in the Private Subnet (<code>10.0.2.0/24</code>). Its Security Group <strong>only allows inbound Port 5432</strong> from the Security Group ID of the Web Server.</li>
+        </ul>
+        <div class="callout callout-green">
+          <div class="callout-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Why this architecture improves security:
+          </div>
+          <p style="margin-bottom:0; font-size:0.95rem;">
+            Even if an attacker scans public IP ranges on the Internet, the database IP does not exist on the public web. Furthermore, the database refuses any connection that does not originate directly from the legitimate web application layer.
+          </p>
+        </div>
+
+        <!-- 10. Key Takeaways -->
+        <h2>10. Key Takeaways</h2>
+        <ul>
+          <li>An <strong>Amazon VPC</strong> is a private, isolated network defined by CIDR blocks within an AWS Region.</li>
+          <li>The presence of an explicit route (<code>0.0.0.0/0</code>) to an <strong>Internet Gateway</strong> in the route table is what defines a subnet as <em>public</em>.</li>
+          <li>For an EC2 instance in a public subnet to communicate with the Internet, it requires a <strong>Public IP</strong>, correct <strong>Route Table</strong>, permissive <strong>Security Group</strong> rules, and non-blocking <strong>Network ACLs</strong>.</li>
+          <li><strong>Private subnets</strong> protect high-value data and internal services by removing all public Internet exposure.</li>
+          <li>Combining public and private subnets implements the foundational principle of <strong>Defense-in-Depth</strong>.</li>
+        </ul>
+
+        <!-- 11. References -->
+        <h2>11. References</h2>
+        <p>For official architectural details and configuration steps, refer to AWS Documentation:</p>
+        <ul>
+          <li>
+            <a href="https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html" target="_blank" rel="noopener noreferrer">Amazon VPC User Guide — What is Amazon VPC?</a>
+          </li>
+          <li>
+            <a href="https://docs.aws.amazon.com/vpc/latest/userguide/configure-subnets.html" target="_blank" rel="noopener noreferrer">Amazon VPC User Guide — Configure Subnets</a>
+          </li>
+          <li>
+            <a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html" target="_blank" rel="noopener noreferrer">Amazon VPC User Guide — Internet Gateways</a>
+          </li>
+        </ul>
+
+      </article>
+
+      <!-- Article Footer Navigation -->
+      <footer class="article-footer-nav">
+        <a href="index.html#blogs" class="btn btn-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back to Blogs</span>
+        </a>
+        <a href="blog2.html" class="btn btn-primary">
+          <span>Next: IAM Role for EC2</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </footer>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h3>FCAJ Journey</h3>
+          <p>Learning AWS • Building Cloud Skills</p>
+        </div>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#blogs">Blogs</a></li>
+          <li><a href="index.html#worklogs">Worklogs</a></li>
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="https://github.com/TKhanhJK/fcj-workshop-template" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Tong Gia Khanh. Built for my FCAJ learning journey.</p>
+        <p style="color:var(--text-light-muted);">Deployed via GitHub Pages</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

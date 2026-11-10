@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Personal AWS learning portfolio documenting my First Cloud AI Journey (FCAJ), covering cloud architecture, networking, security, and hands-on worklogs.">
+  <meta name="author" content="Tong Gia Khanh">
+  <title>FCAJ Journey | AWS Learning Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Modern Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Accessibility Skip Link -->
+  <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
+  <!-- Navigation Bar -->
+  <header class="navbar" role="banner">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo" aria-label="FCAJ Journey Home">
+        <div class="nav-logo-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+          </svg>
+        </div>
+        <span>FCAJ<span class="accent">.</span>Journey</span>
+      </a>
+
+      <button class="mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="primary-nav">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <nav id="primary-nav" aria-label="Primary navigation">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link active">Home</a></li>
+          <li><a href="#blogs" class="nav-link">Blogs</a></li>
+          <li><a href="#worklogs" class="nav-link">Worklogs</a></li>
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li>
+            <a href="https://github.com/TKhanhJK/fcj-workshop-template" target="_blank" rel="noopener noreferrer" class="nav-cta">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+              <span>GitHub</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main id="main-content">
+
+    <!-- Hero Section -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="hero-container">
+        <div class="hero-text">
+          <div class="hero-label">
+            <span class="badge-dot" style="width:8px;height:8px;border-radius:50%;background-color:var(--accent-primary);display:inline-block;"></span>
+            FIRST CLOUD AI JOURNEY
+          </div>
+          <h1 id="hero-heading" class="hero-title">Learning AWS, One Step at a Time.</h1>
+          <p class="hero-description">
+            Documenting my journey through AWS cloud fundamentals, networking, security, and cloud architecture.
+          </p>
+          <div class="hero-actions">
+            <a href="#blogs" class="btn btn-primary">
+              <span>Explore My Blogs</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14m-7-7 7 7-7 7"/>
+              </svg>
+            </a>
+            <a href="https://github.com/TKhanhJK/fcj-workshop-template" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+              <span>View GitHub</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Hero Cloud Architecture Visual (CSS/SVG) -->
+        <div class="hero-visual" aria-hidden="true">
+          <div class="cloud-card">
+            <div class="card-header-status">
+              <span class="status-dot">VPC: 10.0.0.0/16</span>
+              <span class="badge badge-orange">AWS Region: ap-southeast-1</span>
+            </div>
+            <div class="arch-mini-diagram">
+              <div class="arch-node">
+                <div class="arch-node-title">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff9900" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                  </svg>
+                  <span>Internet Gateway (IGW)</span>
+                </div>
+                <span class="arch-node-badge">Public Edge</span>
+              </div>
+              <div class="arch-arrow">↓ 0.0.0.0/0</div>
+              <div class="arch-node">
+                <div class="arch-node-title">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                  </svg>
+                  <span>EC2 Web Instances</span>
+                </div>
+                <span class="arch-node-badge" style="background:rgba(56,189,248,0.2);color:#38bdf8;">Public Subnet</span>
+              </div>
+              <div class="arch-arrow">↓ Port 5432 / 3306</div>
+              <div class="arch-node">
+                <div class="arch-node-title">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2">
+                    <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                  </svg>
+                  <span>RDS Multi-AZ Database</span>
+                </div>
+                <span class="arch-node-badge" style="background:rgba(52,211,153,0.2);color:#34d399;">Private Subnet</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About FCAJ Section -->
+    <section class="section" aria-labelledby="about-fcaj-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="about-fcaj-heading" class="section-title">About My FCAJ Journey</h2>
+          <p class="section-subtitle">
+            This website documents my learning journey through the First Cloud AI Journey (FCAJ), including AWS fundamentals, technical blog posts, worklogs, workshops, and practical cloud experiments.
+          </p>
+        </div>
+
+        <div class="about-grid">
+          <!-- Card 1 -->
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                <line x1="6" y1="18" x2="6.01" y2="18"></line>
+              </svg>
+            </div>
+            <h3 class="feature-title">AWS Fundamentals</h3>
+            <p class="feature-desc">
+              Mastering core building blocks including IAM roles, compute with Amazon EC2, object storage with S3, and relational databases with RDS.
+            </p>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+                <polyline points="2 12 12 17 22 12"></polyline>
+              </svg>
+            </div>
+            <h3 class="feature-title">Cloud Architecture</h3>
+            <p class="feature-desc">
+              Designing well-architected cloud systems focusing on multi-tier networking, isolation, high availability, Auto Scaling, and load balancing.
+            </p>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+              </svg>
+            </div>
+            <h3 class="feature-title">Hands-on Learning</h3>
+            <p class="feature-desc">
+              Applying theory into practice through reproducible cloud labs, AWS CLI scripting, and strict defense-in-depth security best practices.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Technical Blogs Section -->
+    <section id="blogs" class="section section-alt" aria-labelledby="blogs-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="blogs-heading" class="section-title">Technical Blogs</h2>
+          <p class="section-subtitle">
+            Short technical notes and lessons learned during my AWS journey.
+          </p>
+        </div>
+
+        <div class="blog-grid">
+          <!-- Blog Card 1 -->
+          <article class="blog-card">
+            <div class="blog-card-meta">
+              <span class="badge badge-orange">Networking</span>
+              <span class="badge badge-gray">VPC</span>
+            </div>
+            <h3 class="blog-card-title">
+              <a href="blog1.html">AWS VPC: Public Subnet, Private Subnet and Internet Gateway</a>
+            </h3>
+            <p class="blog-card-desc">
+              Understanding the fundamentals of Amazon VPC, subnet types, routing, and Internet connectivity.
+            </p>
+            <div class="blog-card-action">
+              <a href="blog1.html" class="read-more-link" aria-label="Read article on AWS VPC">
+                <span>Read Article</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14m-7-7 7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </article>
+
+          <!-- Blog Card 2 -->
+          <article class="blog-card">
+            <div class="blog-card-meta">
+              <span class="badge badge-orange">Security</span>
+              <span class="badge badge-gray">IAM</span>
+            </div>
+            <h3 class="blog-card-title">
+              <a href="blog2.html">IAM Role for EC2: Secure Access to AWS Services</a>
+            </h3>
+            <p class="blog-card-desc">
+              Understanding how IAM Roles allow EC2 instances to access AWS services securely without storing long-term credentials.
+            </p>
+            <div class="blog-card-action">
+              <a href="blog2.html" class="read-more-link" aria-label="Read article on IAM Role for EC2">
+                <span>Read Article</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14m-7-7 7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </article>
+
+          <!-- Blog Card 3 -->
+          <article class="blog-card">
+            <div class="blog-card-meta">
+              <span class="badge badge-orange">Security</span>
+              <span class="badge badge-gray">Networking</span>
+            </div>
+            <h3 class="blog-card-title">
+              <a href="blog3.html">Security Groups vs Network ACLs</a>
+            </h3>
+            <p class="blog-card-desc">
+              Understanding the differences between Security Groups and Network ACLs and how they protect AWS network resources.
+            </p>
+            <div class="blog-card-action">
+              <a href="blog3.html" class="read-more-link" aria-label="Read article on Security Groups vs Network ACLs">
+                <span>Read Article</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14m-7-7 7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Worklogs Section -->
+    <section id="worklogs" class="section" aria-labelledby="worklogs-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="worklogs-heading" class="section-title">FCAJ Worklogs</h2>
+          <p class="section-subtitle">
+            Weekly diary documenting continuous hands-on labs and learning milestones.
+          </p>
+        </div>
+
+        <div class="worklogs-grid">
+          <!-- Week 1 -->
+          <div class="worklog-card">
+            <div class="worklog-badge-week">
+              <span>WK</span>
+              01
+            </div>
+            <div class="worklog-content">
+              <h4>Week 1: AWS Fundamentals</h4>
+              <p>AWS Console, AWS CLI setup, EC2 deployment, and EBS volume attachment.</p>
+            </div>
+          </div>
+
+          <!-- Week 2 -->
+          <div class="worklog-card">
+            <div class="worklog-badge-week">
+              <span>WK</span>
+              02
+            </div>
+            <div class="worklog-content">
+              <h4>Week 2: AWS Networking</h4>
+              <p>IAM security, Custom VPC, CIDR, public & private subnets, and Route Tables.</p>
+            </div>
+          </div>
+
+          <!-- Week 3 -->
+          <div class="worklog-card">
+            <div class="worklog-badge-week">
+              <span>WK</span>
+              03
+            </div>
+            <div class="worklog-content">
+              <h4>Week 3: EC2 & IAM</h4>
+              <p>Amazon S3 storage, Amazon RDS databases, and secure EC2-to-RDS connectivity.</p>
+            </div>
+          </div>
+
+          <!-- Week 4 -->
+          <div class="worklog-card">
+            <div class="worklog-badge-week">
+              <span>WK</span>
+              04
+            </div>
+            <div class="worklog-content">
+              <h4>Week 4: AWS Security</h4>
+              <p>CloudWatch observability, Systems Manager, CI/CD pipeline, and cost optimization.</p>
+            </div>
+          </div>
+
+          <!-- Week 5 -->
+          <div class="worklog-card">
+            <div class="worklog-badge-week">
+              <span>WK</span>
+              05
+            </div>
+            <div class="worklog-content">
+              <h4>Week 5: Cloud Architecture</h4>
+              <p>Serverless computing, AWS Lambda, API Gateway, SQS queues, and SNS notifications.</p>
+            </div>
+          </div>
+
+          <!-- Week 6 -->
+          <div class="worklog-card">
+            <div class="worklog-badge-week">
+              <span>WK</span>
+              06
+            </div>
+            <div class="worklog-content">
+              <h4>Week 6: AWS Services & Hands-on</h4>
+              <p>EC2 Auto Scaling, Application Load Balancer, Amazon Route 53, and CloudFront CDN.</p>
+            </div>
+          </div>
+        </div>
+
+        <p class="worklogs-note">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span>Worklogs are continuously updated throughout my FCAJ journey.</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section section-alt" aria-labelledby="about-student-heading">
+      <div class="container">
+        <div class="about-box">
+          <div class="about-text">
+            <h3 id="about-student-heading">About</h3>
+            <p>
+              Hi, I'm <strong>Tong Gia Khanh</strong>, a student documenting my journey into cloud computing and AWS through the First Cloud AI Journey.
+            </p>
+
+            <h4 style="font-size: 1rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 12px;">Learning Focus:</h4>
+            <ul class="focus-list">
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>AWS Cloud Fundamentals</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Networking & VPC Architecture</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Cloud Security & Least Privilege</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Scalable Cloud Architecture</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Hands-on Lab Practice & Automation</span>
+              </li>
+            </ul>
+
+            <a href="https://github.com/TKhanhJK/fcj-workshop-template" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+              <span>View My GitHub</span>
+            </a>
+          </div>
+
+          <div class="about-badge-card">
+            <h4>First Cloud AI Journey</h4>
+            <p>
+              Participating in the FCAJ Workforce Bootcamp to master Amazon Web Services and build production-ready cloud solutions with AWS best practices.
+            </p>
+            <div style="display:flex; flex-direction:column; gap:8px; font-size:0.85rem; color:#94a3b8;">
+              <div><strong>Author:</strong> Tong Gia Khanh</div>
+              <div><strong>Program:</strong> FCAJ Workforce Bootcamp</div>
+              <div><strong>Specialization:</strong> Cloud Engineering & DevOps</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h3>FCAJ Journey</h3>
+          <p>Learning AWS • Building Cloud Skills</p>
+        </div>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#blogs">Blogs</a></li>
+          <li><a href="index.html#worklogs">Worklogs</a></li>
+          <li><a href="index.html#about">About</a></li>
+          <li><a href="https://github.com/TKhanhJK/fcj-workshop-template" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        </ul>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Tong Gia Khanh. Built for my FCAJ learning journey.</p>
+        <p style="color:var(--text-light-muted);">Deployed via GitHub Pages</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
